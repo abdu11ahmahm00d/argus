@@ -1,0 +1,14 @@
+ultralytics
+easyocr
+opencv-python
+numpy
+filterpy
+pyserial-asyncio
+pydantic
+pyyaml
+transitions
+structlog
+python-telegram-bot
+fastapi
+uvicorn
+websockets

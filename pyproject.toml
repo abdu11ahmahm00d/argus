@@ -1,0 +1,21 @@
+[project]
+name = "argus"
+version = "0.1.0"
+description = "Autonomous Real-time Guard for Unsafe Sites — YOLOv8 helmet detection + Arduino Bluetooth hardware response"
+requires-python = ">=3.11"
+dependencies = [
+    "easyocr>=1.7.2",
+    "fastapi>=0.140.0",
+    "filterpy>=1.4.5",
+    "numpy>=2.4.6",
+    "opencv-python>=5.0.0.93",
+    "pydantic>=2.13.4",
+    "pyserial-asyncio>=0.6",
+    "python-telegram-bot>=22.8",
+    "pyyaml>=6.0.3",
+    "structlog>=26.1.0",
+    "transitions>=0.9.3",
+    "ultralytics>=8.4.105",
+    "uvicorn>=0.51.0",
+    "websockets>=16.1.1",
+]

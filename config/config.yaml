@@ -1,0 +1,50 @@
+camera:
+  source: "http://192.168.1.5:8080/video"  # IP Webcam URL — change to your phone's
+  width: 640
+  height: 480
+  fps: 30
+  queue_maxsize: 3
+
+zones: {}  # Populated by calibrate.py
+
+model:
+  path: "training/runs/detect/train/weights/best.pt"
+  confidence_threshold: 0.45
+  classes:
+    capped: 0   # Roboflow "helmet" class
+    uncapped: 1 # Roboflow "head" class
+    unknown: 2  # Roboflow "person" class
+
+clahe:
+  clip_limit: 2.0
+  tile_grid_size: 8
+
+kalman:
+  predict_frames_ahead: 15
+  max_age: 30
+  speed_threshold: 5.0
+
+threat:
+  max_occupancy: 2
+  repeat_offender_limit: 3
+  no_detection_timeout: 5  # seconds — returns to IDLE
+
+serial:
+  port: "COM7"  # Change to your HC-05 COM port
+  baud: 9600
+  timeout: 0.2
+
+telegram:
+  token: "YOUR_BOT_TOKEN_HERE"
+  supervisor_id: 0  # Your Telegram user ID
+
+workers:
+  1: "Karim Ahmed"
+  2: "Rahim Mia"
+  3: "Jamal Hossain"
+  4: "Faruk Islam"
+  5: "Sumon Das"
+
+logging:
+  level: "INFO"
+  file: "logs/session.log"

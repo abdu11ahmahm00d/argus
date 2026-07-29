@@ -1,0 +1,34 @@
+#ifndef PROTOCOL_H
+#define PROTOCOL_H
+
+#define CMD_BARRIER_DROP "BARRIER_DROP"
+#define CMD_BARRIER_RAISE "BARRIER_RAISE"
+#define CMD_FLAG_RAISE "FLAG_RAISE"
+#define CMD_FLAG_LOWER "FLAG_LOWER"
+#define CMD_LASER_ON "LASER_ON"
+#define CMD_LASER_OFF "LASER_OFF"
+#define CMD_BUZZ "BUZZ"
+#define CMD_LED_RED "LED_RED"
+#define CMD_LED_GREEN "LED_GREEN"
+#define CMD_LED_OFF "LED_OFF"
+#define CMD_PING "PING"
+#define CMD_RESET "RESET"
+
+#define PIN_HC05_TX 10
+#define PIN_HC05_RX 11
+#define PIN_SERVO1 9
+#define PIN_SERVO2 6
+#define PIN_LASER 5
+#define PIN_LED_RED 4
+#define PIN_BUZZER 3
+#define PIN_LED_GREEN A0
+#define PIN_TRIG 7
+#define PIN_ECHO 8
+#define PIN_SWITCH 2
+
+#define SERVO1_REST 90
+#define SERVO1_ACTIVE 0
+#define SERVO2_REST 0
+#define SERVO2_ACTIVE 90
+
+#endif

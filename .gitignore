@@ -1,0 +1,41 @@
+# Agent tooling
+.opencode/
+.cortexkit/
+.code-nexus/
+
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.ruff_cache/
+
+# Virtual environments
+.venv
+.venv/
+
+# Model weights (large, not committed)
+training/runs/
+*.pt
+
+# Dataset (downloaded by download_dataset.py)
+training/dataset/train/
+training/dataset/valid/
+training/dataset/test/
+training/dataset/*.cache
+
+# Logs
+logs/
+*.log
+
+# Worker face embeddings (generated at runtime)
+workers/*.pkl
+
+# Dashboard node_modules
+dashboard/node_modules/
+
+# OS
+Thumbs.db
+.DS_Store

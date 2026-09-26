@@ -1,8 +1,8 @@
-# 🛡️ ARGUS — Autonomous Real-time Guard for Unsafe Sites
+# 🛡️ ARGUS: Autonomous Real-time Guard for Unsafe Sites
 
 **ARGUS** is a computer vision safety enforcement system for construction sites. It detects whether workers are wearing safety helmets using YOLOv8, tracks their movement with Kalman filters, and triggers physical responses (LEDs, buzzer, barrier, laser) over Bluetooth to an Arduino Uno.
 
-> **v1 (completed):** Ultrasonic sweep scanner with laser — a servo-mounted sonar that scans a field and pinpoints any object with a laser beam. Photos available on request.
+> **v1 (completed):** An ultrasonic sweep scanner with a servo-mounted sonar that scans a field and pinpoints any object with a laser beam. Photos available on request.
 >
 > **v2 (this repo):** Camera-based YOLOv8 helmet detection over an overhead phone camera feed. Adds ML classification, predictive tracking, telemetry, and Telegram supervisor interface.
 
@@ -10,41 +10,11 @@
 
 ## System Pipeline
 
-```
-┌──────────────┐   WiFi    ┌──────────────┐   JSON    ┌─────────────┐
-│  Phone (IP   │ ────────→ │  Laptop with  │ ────────→ │  Arduino    │
-│  Webcam app) │  MJPEG    │  GTX 1080     │  Bluetooth │  Uno R3     │
-│  overhead    │  stream   │  Python +     │  HC-05     │             │
-└──────────────┘           │  YOLOv8       │  9600 baud │  ─── LED    │
-                           │               │            │  ─── Buzzer │
-                           │               │            │  ─── Laser  │
-                           │               │            │  ─── Servos │
-                           │               │            │  ─── Switch │
-                           └──────────────┘            └──────┬──────┘
-                                                              │
-                                                              ▼
-                                                     ┌─────────────────┐
-                                                     │   Hardware      │
-                                                     │   Responses     │
-                                                     │   (LED/buzzer/  │
-                                                     │    barrier/     │
-                                                     │    laser/flag)  │
-                                                     └─────────────────┘
-                             ┌─────────────────┐
-                             │   Telegram Bot  │
-                             │   (supervisor   │
-                             │    interface)   │
-                             └─────────────────┘
-```
+![ARGUS system pipeline: phone camera to laptop inference to Arduino actuation](docs/diagrams/system-pipeline.svg)
 
 ### Per-Frame Pipeline
 
-```
-Camera frame → YOLOv8 detection → brain ROI extraction → CLAHE enhancement
-    → class check (helmet/head/person) → Kalman tracker update
-    → zone membership (safe/danger/outside) → threat state machine
-    → Arduino serial command → Telegram alert → heatmap overlay
-```
+![ARGUS per-frame pipeline from camera frame to Arduino command, Telegram alert, and heatmap overlay](docs/diagrams/per-frame-pipeline.svg)
 
 ---
 
@@ -53,7 +23,7 @@ Camera frame → YOLOv8 detection → brain ROI extraction → CLAHE enhancement
 | Feature | Implementation |
 |---|---|
 | **Helmet detection** | YOLOv8n trained on Roboflow Hard Hat Workers (7,035 images, 3 classes) |
-| **Zone enforcement** | Two configurable polygons — safe zone (green) and danger zone (red) |
+| **Zone enforcement** | Two configurable polygons: safe zone (green) and danger zone (red) |
 | **CLAHE preprocessing** | Contrast-limited adaptive histogram equalisation for harsh lighting |
 | **Kalman tracking** | Constant-velocity filter predicting position 15 frames ahead |
 | **Predictive intercept** | Barrel drops BEFORE a non-compliant object enters the danger zone |
@@ -99,12 +69,13 @@ argus/
 │   ├── BOM.md                   ← Bill of materials with costs
 │   └── wiring.md                ← Complete pin wiring guide
 ├── docs/
+│   ├── diagrams/                 ← README figures, generated with Archify
 │   ├── hardware_spec.md         ← Full hardware specification and assembly
 │   └── software_guide.md        ← Software phases and validation
 ├── dashboard/                   ← Three.js live 3D radar view (optional extension)
 ├── workers/                     ← ArcFace embeddings (optional face recognition)
 ├── logs/                        ← Session log output
-├── main.py                      ← Single entry point — starts everything
+├── main.py                      ← Single entry point, starts everything
 ├── requirements.txt             ← Python dependencies
 └── pyproject.toml               ← Project metadata
 ```
@@ -203,8 +174,8 @@ python main.py
 ### Zone System
 
 Two physical tape squares on the floor define the visual boundaries:
-- **Outer square** — safe zone (workers can roam freely)
-- **Inner square** — danger zone (crane swing radius, restricted)
+- **Outer square**: safe zone (workers can roam freely)
+- **Inner square**: danger zone (crane swing radius, restricted)
 
 The calibration tool maps these to polygon coordinates in `config.yaml`.
 
@@ -224,23 +195,7 @@ The calibration tool maps these to polygon coordinates in `config.yaml`.
 
 ### State Machine
 
-```
-                ┌────────────────────────────────────┐
-                │               IDLE                  │
-                └──┬────────────────────────────┬────┘
-        helmeted  │                    non-helmeted │
-           ┌──────▼──────┐              ┌──────────▼────┐
-           │  MONITORING  │              │   WARNING     │
-           └──┬───────────┘              └──┬────────────┘
-  crosses into │                  approaches │ danger zone
-  danger zone  │                          ┌──▼──────────┐
-     ┌────────▼───────┐                  │  INTERCEPT   │
-     │   AUTHORIZED   │                  └──┬──────────┘
-     └────────┬───────┘     stops/safe │
-              │              ┌─────────▼──────┐
-              └──────────────►    IDLE/TBD     │
-                             └────────────────┘
-```
+![ARGUS five-state threat machine: IDLE, MONITORING, WARNING, INTERCEPT, AUTHORIZED](docs/diagrams/threat-state-machine.svg)
 
 ### Arduino Command Protocol
 
@@ -282,7 +237,7 @@ Arduino replies with ACK:
 
 ## Demo Script
 
-> Estimated: 6 acts × 60–90 seconds = ~7 minutes.
+> Estimated: 6 acts × 60 to 90 seconds = ~7 minutes.
 
 | Act | Action | System Response |
 |---|---|---|
@@ -303,7 +258,7 @@ The system can be retrained for any object detection task. The Roboflow Hard Hat
 
 ### Custom Dataset (e.g. Jenga blocks + Sprite cap helmets)
 
-This was the original ARGUS prototype concept — using Jenga blocks as construction workers and Sprite caps as safety helmets. To replicate:
+This was the original ARGUS prototype concept, using Jenga blocks as construction workers and Sprite caps as safety helmets. To replicate:
 
 1. Collect ~25+ photos of Jenga blocks with Sprite cap on + ~25+ without
 2. Upload to [Roboflow](https://roboflow.com) and annotate (2 classes: `capped`, `uncapped`)
@@ -335,7 +290,7 @@ model:
 | Metric | Value |
 |---|---|
 | Detection FPS (GTX 1080) | ~30 FPS |
-| Full pipeline latency | ~500ms–2s |
+| Full pipeline latency | ~500ms to 2s |
 | Frame resolution | 640×480 |
 | YOLO input size | 640×640 |
 | Bluetooth baud rate | 9600 |
@@ -357,7 +312,7 @@ Photos of the v1 hardware build are available on request.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
 
 ---
 
